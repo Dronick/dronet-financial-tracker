@@ -15,7 +15,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -24,7 +29,9 @@ jobs:
             unzip \
             openjdk-17-jdk \
             python3-pip \
+            python3-venv \
             autoconf \
+            automake \
             libtool \
             pkg-config \
             zlib1g-dev \
@@ -36,12 +43,12 @@ jobs:
 
       - name: Install Buildozer
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install --upgrade buildozer cython
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade buildozer cython
 
       - name: Build APK
         run: |
-          yes | buildozer android debug
+          buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
